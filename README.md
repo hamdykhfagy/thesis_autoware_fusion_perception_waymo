@@ -56,9 +56,44 @@ Autoware is an open-source software stack for self-driving vehicles, built on th
 
 ![Autoware architecture](https://static.wixstatic.com/media/984e93_552e338be28543c7949717053cc3f11f~mv2.png/v1/crop/x_0,y_1,w_1500,h_879/fill/w_863,h_506,al_c,usm_0.66_1.00_0.01,enc_auto/Autoware-GFX_edited.png)
 
+---
+
+## 🎥 Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/XrM_PXbIQlI/0.jpg)](https://youtu.be/XrM_PXbIQlI)
+
+> Short demo of my customized **Autoware fusion perception** pipeline running on a **Waymo Open Dataset** rosbag: LiDAR CenterPoint + YOLOX (TensorRT) + ROI fusion + multi-object tracking, with RViz visualization.
+
+---
+
+## 🔬 Thesis: Optimizing Sensor Fusion Pipelines for Latency and Throughput in Autonomous Systems
+
+This repository contains my thesis work, focused on **reducing end-to-end latency** and **improving throughput** in ROS 2–based perception stacks for autonomous driving. The goal is to make fusion pipelines both **faster** and **more reliable** under real-time constraints.
+
+### What I built in this repo
+
+- **Perception stack composition**
+  - **LiDAR CenterPoint** (3D object detection)
+  - **YOLOX (TensorRT)** for image-based detection
+  - **ROI fusion** (projection-based) and **Multi-Object Tracking**
+  - Optional RViz and tracing toggles via launch arguments
+- **Waymo Open Dataset → ROS 2** playback and mapping
+  - Rosbag conversion and topic remapping
+  - Static/TF alignment and pointcloud map loading
+- **Latency & throughput analysis**
+  - **ros2_tracing / LTTng** instrumentation
+  - Timeline & callback profiling to identify bottlenecks
+  - Launch-time switches for tracing sessions and profiles
+
+> Technologies: ROS 2 Humble, Autoware Universe, TensorRT, LTTng, rviz2.
+
+---
+
 ## Documentation
 
 To learn more about using or developing Autoware, refer to the [Autoware documentation site](https://autowarefoundation.github.io/autoware-documentation/main/). You can find the source for the documentation in [autowarefoundation/autoware-documentation](https://github.com/autowarefoundation/autoware-documentation).
+
+---
 
 ## Repository overview
 
@@ -80,9 +115,13 @@ To learn more about using or developing Autoware, refer to the [Autoware documen
   - Documentation repository for Autoware users and developers.
   - Since Autoware Core/Universe has multiple repositories, a central documentation repository is important to make information accessible from a single place.
 
+---
+
 ## Using Autoware.AI
 
 If you wish to use Autoware.AI, the previous version of Autoware based on ROS 1, switch to [autoware-ai](https://github.com/autowarefoundation/autoware_ai) repository. However, be aware that Autoware.AI has reached the end-of-life as of 2022, and we strongly recommend transitioning to Autoware Core/Universe for future use.
+
+---
 
 ## Contributing
 
@@ -90,6 +129,8 @@ If you wish to use Autoware.AI, the previous version of Autoware based on ROS 1,
   - Make sure to follow the [Contribution Guidelines](https://autowarefoundation.github.io/autoware-documentation/main/contributing/).
   - Take a look at Autoware's [various working groups](https://github.com/autowarefoundation/autoware-projects/wiki#working-group-list) to gain an understanding of any work in progress and to see how projects are managed.
 - If you have any technical questions, you can start a discussion in the [Q&A category](https://github.com/autowarefoundation/autoware/discussions/categories/q-a) to request help and confirm if a potential issue is a bug or not.
+
+---
 
 ## Useful resources
 
