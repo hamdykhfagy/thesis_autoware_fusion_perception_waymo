@@ -3,14 +3,14 @@
 *.swo
 
 # Visual Studio Code
-.vscode/
-*.code-workspace
+# .vscode/
+# *.code-workspace
 
 # colcon
 build/
 install/
 log/
-/src/
+# src/
 
 # Python
 *.pyc
