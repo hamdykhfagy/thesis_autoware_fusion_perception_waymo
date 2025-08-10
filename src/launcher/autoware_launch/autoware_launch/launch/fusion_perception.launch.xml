@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Arguments -->
+  <arg name="use_sim_time" default="true"/>
+  <arg name="trace_enabled" default="true"/>
+  <arg name="rviz" default="true"/>
+  <arg name="data_path" default="$(env HOME)/autoware_data"/>
+
+  <!-- Launch lidar centerpoint -->
+  <include file="$(find-pkg-share autoware_lidar_centerpoint)/launch/lidar_centerpoint.launch.xml">
+    <arg name="model_param_path" value="$(var data_path)/lidar_centerpoint/centerpoint_tiny.param.yaml"/>
+    <arg name="ml_package_param_path" value="$(var data_path)/lidar_centerpoint/centerpoint_tiny_ml_package.param.yaml"/>
+    <arg name="class_remapper_param_path" value="$(var data_path)/lidar_centerpoint/detection_class_remapper.param.yaml"/>
+    <arg name="common_param_path" value="$(var data_path)/lidar_centerpoint/centerpoint_common.param.yaml"/>
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include>
+
+  <!-- Launch YOLOX detector -->
+  <include file="$(find-pkg-share autoware_tensorrt_yolox)/launch/yolox.launch.xml">
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+  </include>
+
+  <!-- Launch RViz2 if enabled -->
+  <node if="$(var rviz)" pkg="rviz2" exec="rviz2" name="rviz2" output="screen">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+  </node>
+
+</launch>

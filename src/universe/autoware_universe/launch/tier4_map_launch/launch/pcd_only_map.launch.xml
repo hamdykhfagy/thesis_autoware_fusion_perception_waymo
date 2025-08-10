@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="pointcloud_map_path" default="/home/hamdy/autoware_map/waymo/map_00.pcd"/>
+  <arg name="pointcloud_map_metadata_path" default="/home/hamdy/autoware_map/waymo/pointcloud_map_config.yaml"/>
+  <arg name="use_multithread" default="false"/>
+
+  <let name="container_type" value="component_container" unless="$(var use_multithread)"/>
+  <let name="container_type" value="component_container_mt" if="$(var use_multithread)"/>
+
+  <group>
+    <push-ros-namespace namespace="map"/>
+
+    <node_container pkg="rclcpp_components"
+                    exec="$(var container_type)"
+                    name="map_container"
+                    namespace=""
+                    output="both">
+
+      <composable_node pkg="autoware_map_loader"
+                       plugin="autoware::map_loader::PointCloudMapLoaderNode"
+                       name="pointcloud_map_loader">
+
+        <!-- Load minimal static params (no $(var) inside YAML) -->
+        <param from="/home/hamdy/autoware/src/launcher/autoware_launch/autoware_launch/config/map/custom_pointcloud_map_loader.param.yaml"/>
+
+        <!-- Set the dynamic paths here (launch-time substitution OK) -->
+        <param name="pcd_paths_or_directory" value="['$(var pointcloud_map_path)']"/>
+        <param name="pcd_metadata_path" value="$(var pointcloud_map_metadata_path)"/>
+
+        <remap from="output/pointcloud_map" to="pointcloud_map"/>
+        <remap from="output/pointcloud_map_metadata" to="pointcloud_map_metadata"/>
+        <remap from="service/get_partial_pcd_map" to="/map/get_partial_pointcloud_map"/>
+        <remap from="service/get_differential_pcd_map" to="/map/get_differential_pointcloud_map"/>
+        <remap from="service/get_selected_pcd_map" to="/map/get_selected_pointcloud_map"/>
+      </composable_node>
+    </node_container>
+
+    <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen"/>
+  </group>
+</launch>
