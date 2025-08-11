@@ -329,7 +329,7 @@ def generate_launch_description():
         # Map component args
         # ----------------------
         DeclareLaunchArgument("map_path", default_value="/home/hamdy/autoware_map/waymo"),
-        DeclareLaunchArgument("pointcloud_map_file", default_value="map_testing.pcd"),
+        DeclareLaunchArgument("pointcloud_map_file", default_value="map.pcd"),
         DeclareLaunchArgument("lanelet2_map_file", default_value=""),
 
         # ----------------------
@@ -377,7 +377,7 @@ def generate_launch_description():
         # ----------------------
         DeclareLaunchArgument(
             "bag_path",
-            default_value="/home/hamdy/waymo2bag/rosbag/individual_files_testing_segment-10084636266401282188_1120_000_1140_000_with_camera_labels/testing_bag.db3"
+            default_value="/home/hamdy/bags/waymo/ros2bags/segment-10149575340910243572_2720_000_2740_000_with_camera_labels/segment-10149575340910243572_2720_000_2740_000_with_camera_labels_0.db3"
         ),
         DeclareLaunchArgument("bag_rate", default_value="1.0"),
 

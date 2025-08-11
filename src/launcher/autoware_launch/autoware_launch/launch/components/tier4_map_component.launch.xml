@@ -2,7 +2,7 @@
 <launch>
   <!-- ADD THESE -->
   <arg name="map_path" default="/home/hamdy/autoware_map/waymo"/>
-  <arg name="pointcloud_map_file" default="map_testing.pcd"/>
+  <arg name="pointcloud_map_file" default="waymo_map_all_3.pcd"/>
   <arg name="lanelet2_map_file" default=""/>   <!-- leave empty if you don’t have Lanelet2 -->
   <arg name="use_sim_time" default="true"/>
 
