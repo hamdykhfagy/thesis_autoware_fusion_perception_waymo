@@ -1,60 +1,10 @@
-# Autoware - the world's leading open-source software project for autonomous driving
+# Thesis: Optimising Sensor Fusion Pipelines for Latency and Throughput in Autonomous Driving
 
-![Autoware_RViz](https://user-images.githubusercontent.com/63835446/158918717-58d6deaf-93fb-47f9-891d-e242b02cba7b.png)
+**HAW Hamburg — Bachelor's Thesis | Grade: 1.0 (Very Good)**
 
-<!--- Contributors -->
-<p align="center">
-    <a href="https://github.com/autowarefoundation/autoware_universe/graphs/contributors">
-        <img src="https://img.shields.io/github/contributors/autowarefoundation/autoware_universe?style=flat&label=Autoware%20Universe%20Contributors"
-            alt="Autoware Universe Contributors" /></a>
-    <a href="https://github.com/autowarefoundation/autoware/graphs/contributors">
-        <img src="https://img.shields.io/github/contributors/autowarefoundation/autoware?style=flat&label=Autoware%20Contributors"
-            alt="Autoware Contributors" /></a>
-</p>
-
-<!--- Commit Activity -->
-<p align="center">
-    <a href="https://github.com/autowarefoundation/autoware_universe/pulse">
-        <img src="https://img.shields.io/github/commit-activity/m/autowarefoundation/autoware_universe?style=flat&label=Autoware%20Universe%20Commit%20Activity"
-            alt="Autoware Universe Activity" /></a>
-    <a href="https://github.com/autowarefoundation/autoware/pulse">
-        <img src="https://img.shields.io/github/commit-activity/m/autowarefoundation/autoware?style=flat&label=Autoware%20Commit%20Activity"
-            alt="Autoware Activity" /></a>
-</p>
-
-<!--- License -->
-<p align="center">
-    <a href="https://github.com/autowarefoundation/autoware/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/autowarefoundation/autoware?style=flat&label=License"
-            alt="License" /></a>
-</p>
-
-<!--- CI Reports -->
-<p align="center">
-    <a href="https://github.com/autowarefoundation/autoware/actions/workflows/health-check.yaml?query=branch%3Amain">
-        <img src="https://img.shields.io/github/actions/workflow/status/autowarefoundation/autoware/health-check.yaml?style=flat&label=health-check"
-            alt="health-check CI" /></a>
-    <a href="https://app.codecov.io/gh/autowarefoundation/autoware_universe">
-        <img src="https://img.shields.io/codecov/c/gh/autowarefoundation/autoware_universe?style=flat&label=Coverage&logo=codecov&logoColor=white"
-            alt="Code Coverage" /></a>
-</p>
-
-<!--- Social Media -->
-<p align="center">
-    <a href="https://discord.gg/Q94UsPvReQ">
-        <img src="https://img.shields.io/discord/953808765935816715?logo=discord&logoColor=white&style=flat&label=Autoware%20Discord"
-            alt="Autoware Discord"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=AutowareFdn">
-        <img src="https://img.shields.io/twitter/follow/AutowareFdn?logo=x&logoColor=white&style=flat"
-            alt="Autoware Twitter / X"></a>
-    <a href="https://www.linkedin.com/company/the-autoware-foundation/">
-        <img src="https://img.shields.io/badge/Linkedin-Autoware%20Foundation-0a66c2?logo=linkedin&logoColor=white&style=flat"
-            alt="Autoware Linkedin"></a>
-</p>
-
-Autoware is an open-source software stack for self-driving vehicles, built on the [Robot Operating System (ROS)](https://www.ros.org/). It includes all of the necessary functions to drive an autonomous vehicles from localization and object detection to route planning and control, and was created with the aim of enabling as many individuals and organizations as possible to contribute to open innovations in autonomous driving technology.
-
-![Autoware architecture](https://static.wixstatic.com/media/984e93_552e338be28543c7949717053cc3f11f~mv2.png/v1/crop/x_0,y_1,w_1500,h_879/fill/w_863,h_506,al_c,usm_0.66_1.00_0.01,enc_auto/Autoware-GFX_edited.png)
+[![ROS 2](https://img.shields.io/badge/ROS_2-Humble-blue?style=flat)](https://docs.ros.org/en/humble/)
+[![Autoware](https://img.shields.io/badge/Autoware-Universe-blue?style=flat)](https://github.com/autowarefoundation/autoware_universe)
+[![License](https://img.shields.io/github/license/autowarefoundation/autoware?style=flat&label=License)](LICENSE)
 
 ---
 
@@ -62,66 +12,134 @@ Autoware is an open-source software stack for self-driving vehicles, built on th
 
 [![Watch the demo](https://img.youtube.com/vi/XrM_PXbIQlI/0.jpg)](https://youtu.be/XrM_PXbIQlI)
 
-> Short demo of my customized **Autoware fusion perception** pipeline running on a **Waymo Open Dataset** rosbag: LiDAR CenterPoint + YOLOX (TensorRT) + ROI fusion + multi-object tracking, with RViz visualization.
+> LiDAR CenterPoint + YOLOX (TensorRT) + ROI fusion + multi-object tracking on a Waymo Open Dataset rosbag, visualised in RViz2.
 
 ---
 
-## 🔬 Thesis: Optimizing Sensor Fusion Pipelines for Latency and Throughput in Autonomous Systems
+## Overview
 
-This repository contains my thesis work, focused on **reducing end-to-end latency** and **improving throughput** in ROS 2–based perception stacks for autonomous driving. The goal is to make fusion pipelines both **faster** and **more reliable** under real-time constraints.
+This repository contains the implementation and profiling infrastructure for my Bachelor's thesis. The goal was not to improve individual detection algorithms, but to study how the **integration of modular perception nodes inside ROS 2** affects end-to-end timing — and to identify where time is actually spent in a production-style fusion stack.
 
-### What I built in this repo
-
-- **Perception stack composition**
-  - **LiDAR CenterPoint** (3D object detection)
-  - **YOLOX (TensorRT)** for image-based detection
-  - **ROI fusion** (projection-based) and **Multi-Object Tracking**
-  - Optional RViz and tracing toggles via launch arguments
-- **Waymo Open Dataset → ROS 2** playback and mapping
-  - Rosbag conversion and topic remapping
-  - Static/TF alignment and pointcloud map loading
-- **Latency & throughput analysis**
-  - **ros2_tracing / LTTng** instrumentation
-  - Timeline & callback profiling to identify bottlenecks
-  - Launch-time switches for tracing sessions and profiles
-
-> Technologies: ROS 2 Humble, Autoware Universe, TensorRT, LTTng, rviz2.
+The pipeline runs on real-world driving data from the **Waymo Open Dataset**, converted to ROS 2 MCAP bag files, and is instrumented with **ros2_tracing / LTTng** for callback-level performance analysis.
 
 ---
 
-## Thesis Quick Start (Fusion Perception + Tracing)
+## Pipeline Architecture
 
-This workspace is configured around the launch file:
+```
+Waymo MCAP bag
+    │
+    ├── /lidar/concatenated/pointcloud ──► pointcloud_preprocessor
+    │                                            │
+    │                                     lidar_centerpoint (GPU)
+    │                                            │ /objects
+    │                                            ▼
+    │                               roi_cluster_fusion_node ◄── tensorrt_yolox (GPU)
+    │                                            │                  ▲
+    └── /camera/front/image ────────────────────────────────────────┘
+                                                 │ /perception/fusion/fused_objects
+                                                 ▼
+                                       multi_object_tracker
+                                                 │
+                                   /perception/tracking/tracked_objects
+```
 
-- `src/launcher/autoware_launch/autoware_launch/launch/fusion_perception.launch.py`
+**Stack:** ROS 2 Humble · Autoware Universe · TensorRT (FP16) · LTTng · Eclipse Trace Compass · rviz2
 
-### 1) Pipeline in this launch file
+---
 
-The perception graph used in this thesis run is:
+## What I built
 
-1. Map component loads pointcloud map + lanelet/tf support.
-2. YOLOX (optional) publishes camera objects and masks.
-3. LiDAR CenterPoint publishes 3D detected objects on `/objects`.
-4. ROI Detected Object Fusion fuses 3D objects with front-camera ROIs.
-5. Multi Object Tracker publishes final tracked objects.
-6. RViz runs optionally for visualization.
-7. Rosbag playback starts after a 15s delay (to let all nodes initialize).
+- **Perception stack:** composed Autoware Universe modules (CenterPoint 3D, YOLOX-S 2D, ROI fusion, multi-object tracker) into a single multi-threaded component container via custom launch files
+- **Dataset pipeline:** converted Waymo Open Dataset `.tfrecord` files to ROS 2 MCAP bags using `waymo2bag` in Docker; verified TF tree and topic alignment in RViz2
+- **Tracing infrastructure:** integrated `ros2_tracing` at runtime without modifying Autoware source; post-processed CTF trace files with `tracetools_analysis` and `analyze_latency.py` / `flow_latency.py`
+- **Trace Compass analysis:** used the Control Flow view to correlate LiDAR publish → ROI arrival → fusion/tracking bursts on a common timeline across executor threads
 
-Default topic flow in the current file:
+---
 
-- CenterPoint output: `/objects`
-- Fusion input: `objects_in` (default `/objects`)
-- Fusion output: `objects_out` (default `/perception/fusion/fused_objects`)
-- Tracker output remap: `/perception/tracking/tracked_objects`
+## Results
 
-### 2) Run the thesis launch
+### Results at a glance
+
+> **GPU vs CPU split:** `lidar_centerpoint` dominates compute time (P50 13.84 ms), while tracker (2.29 ms) and ROI fusion (0.28 ms) are comparatively small.
+
+> **Key finding:** ~75% of end-to-end latency at P50 is idle waiting for camera/ROI synchronisation, not compute. Processing accounts for only ~25% (16.6 ms out of 66.8 ms).
+
+> **Safety budget:** Pipeline stays within the 100 ms autonomous-driving safety budget at all measured percentiles (P99 = 71 ms).
+
+> One GPU stall outlier at ~211 ms was observed but does not affect P99.
+
+### Callback Duration Distributions
+
+Measured across **n=132 frames** under wall-clock replay at full system load.
+
+| Node | Stage | P50 (ms) | P90 (ms) | P99 (ms) |
+|---|---|---|---|---|
+| `lidar_centerpoint` | GPU inference (3D detection) | 13.84 | 15.49 | 17.85 |
+| `multi_object_tracker` | CPU tracking | 2.29 | 3.34 | 4.18 |
+| `roi_cluster_fusion_node` | Projection fusion + publish | 0.28 | — | — |
+
+---
+
+### Throughput
+
+| Node | Realised throughput | Nominal sensor rate |
+|---|---|---|
+| `lidar_centerpoint` (GPU) | **7.73 Hz** | 10 Hz |
+| `multi_object_tracker` (CPU) | **7.79 Hz** | 10 Hz |
+
+The tracker keeps up one-for-one with the fused stream (n=132 callbacks each). The gap to 10 Hz is **not** caused by compute — it is caused by per-frame idle time waiting for the camera/ROI stream.
+
+---
+
+### End-to-End Latency (Detector start → Tracker end)
+
+| Metric | Value |
+|---|---|
+| **P50** | **67 ms** |
+| **P90** | 68 ms |
+| **P99** | 71 ms |
+| Safety budget (autonomous driving) | 100 ms |
+
+The pipeline stays comfortably within the 100 ms safety budget at all measured percentiles.
+
+---
+
+### Where Time Goes — Latency Breakdown
+
+| Component | Time (ms) | Share |
+|---|---|---|
+| LiDAR detector callback | 13.64 | 20.4% |
+| ROI fusion/publish callback | 0.28 | 0.4% |
+| Tracker callback | 2.69 | 4.0% |
+| **Processing subtotal** | **16.61** | **24.9%** |
+| **Waiting (cross-modal sync)** | **50.22** | **75.1%** |
+| **End-to-end (LiDAR → Tracker)** | **66.83** | **100%** |
+
+**Key finding:** ~75% of end-to-end latency at P50 is idle waiting time, not computation. The fusion node subscribes to both LiDAR detections and the camera/ROI stream and emits only when both are available. LiDAR completes in ~14 ms; the matching ROI arrives ~50 ms later. Once both are present, fusion and tracking execute back-to-back in a few milliseconds.
+
+The bottleneck is **cross-modal synchronisation**, not GPU or CPU compute.
+
+---
+
+### Tracing Runs
+
+| Run ID | Trace profile | Bag rate | LiDAR → tracked P50 (ms) | LiDAR → tracked P90 (ms) | LiDAR → tracked P99 (ms) | Throughput (Hz) | Notes |
+|---|---|---|---|---|---|---|---|
+| baseline-01 | ros | 1.0 | **67** | **68** | **71** | **7.73** | Default executor, no QoS tuning, FP16 TensorRT |
+
+---
+
+## Quick Start
+
+### 1. Run the thesis pipeline
 
 ```bash
 source install/setup.bash
 ros2 launch autoware_launch fusion_perception.launch.py
 ```
 
-Useful overrides:
+With overrides:
 
 ```bash
 ros2 launch autoware_launch fusion_perception.launch.py \
@@ -132,105 +150,66 @@ ros2 launch autoware_launch fusion_perception.launch.py \
   bag_rate:=1.0
 ```
 
-### 3) Tracing profiles used for evaluation
+### 2. Tracing profiles
 
-The launch file already defines three LTTng profiles:
+Three LTTng profiles are defined in the launch file:
 
-- `ros`: userspace ROS events (`ros2:*`, `rcl:*`, `rclcpp:*`)
-- `kernel`: scheduler and IRQ kernel events
-- `ros-kernel`: both userspace and kernel events
+| Profile | Events captured |
+|---|---|
+| `ros` | Userspace ROS events (`ros2:*`, `rcl:*`, `rclcpp:*`) |
+| `kernel` | Scheduler and IRQ kernel events |
+| `ros-kernel` | Both userspace and kernel |
 
-Trace configuration arguments in the launch file:
+To activate tracing, add one of `trace_ros_only`, `trace_kernel_only`, or `trace_ros_kernel` back into the returned `LaunchDescription` list in `fusion_perception.launch.py`.
 
-- `trace_profile` (`ros`, `kernel`, `ros-kernel`)
-- `trace_append_ts`
-- `trace_base_path` (default `${HOME}/tracing`)
-
-Important note about current launch content:
-
-- Trace actions are defined but not added to the final `LaunchDescription` list by default.
-- To capture traces from this file directly, add one of `trace_ros_only`, `trace_kernel_only`, or `trace_ros_kernel` back into the returned `LaunchDescription` list.
-
-### 4) Analyze trace outputs
-
-Two scripts are provided under `tracing/`:
-
-- `tracing/analyze_latency.py`
-- `tracing/flow_latency.py`
-
-Example usage:
+### 3. Analyse trace outputs
 
 ```bash
 python3 tracing/analyze_latency.py ~/tracing/fusion_perception_trace-*
 python3 tracing/flow_latency.py ~/tracing/fusion_perception_trace-*
 ```
 
-The analysis exports CSV files named like:
+Output CSVs:
 
 - `latency_camera_front_image__to__perception_tracking_tracked_objects.csv`
 - `latency_lidar_concatenated_pointcloud__to__perception_tracking_tracked_objects.csv`
 
-### 5) Tracing results section (fill with your latest run)
+### 4. Topic flow (default)
 
-Use this table in your thesis reports and keep one row per experiment run:
-
-| Run ID | Trace profile | Bag rate | Camera -> tracked p50 (ms) | Camera -> tracked p95 (ms) | Camera -> tracked p99 (ms) | LiDAR -> tracked p50 (ms) | LiDAR -> tracked p95 (ms) | LiDAR -> tracked p99 (ms) | Notes |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---|
-| baseline-01 | ros | 1.0 | - | - | - | - | - | - | fill from CSV describe() |
-
-Suggested interpretation fields to track over time:
-
-- Throughput trend (messages/sec reaching tracked output)
-- Tail latency stability (p95/p99 under load)
-- Effect of enabling/disabling YOLOX and changing bag playback rate
+| Topic | Description |
+|---|---|
+| `/objects` | CenterPoint 3D detections |
+| `objects_in` → `/objects` | Fusion node input remap |
+| `objects_out` → `/perception/fusion/fused_objects` | Fusion node output |
+| `/perception/tracking/tracked_objects` | Final tracker output |
 
 ---
 
-## Documentation
+## Repository structure
 
-To learn more about using or developing Autoware, refer to the [Autoware documentation site](https://autowarefoundation.github.io/autoware-documentation/main/). You can find the source for the documentation in [autowarefoundation/autoware-documentation](https://github.com/autowarefoundation/autoware-documentation).
-
----
-
-## Repository overview
-
-- [autowarefoundation/autoware](https://github.com/autowarefoundation/autoware)
-  - Meta-repository containing `.repos` files to construct an Autoware workspace.
-  - It is anticipated that this repository will be frequently forked by users, and so it contains minimal information to avoid unnecessary differences.
-- [autowarefoundation/autoware_core](https://github.com/autowarefoundation/autoware_core)
-  - Main repository for high-quality, stable ROS packages for Autonomous Driving.
-  - Based on [Autoware.Auto](https://gitlab.com/autowarefoundation/autoware.auto/AutowareAuto) and [Autoware.Universe](https://github.com/autowarefoundation/autoware_universe).
-- [autowarefoundation/autoware_universe](https://github.com/autowarefoundation/autoware_universe)
-  - Repository for experimental, cutting-edge ROS packages for Autonomous Driving.
-  - Autoware Universe was created to make it easier for researchers and developers to extend the functionality of Autoware Core
-- [autowarefoundation/autoware_launch](https://github.com/autowarefoundation/autoware_launch)
-  - Launch configuration repository containing node configurations and their parameters.
-- [autowarefoundation/autoware-github-actions](https://github.com/autowarefoundation/autoware-github-actions)
-  - Contains [reusable GitHub Actions workflows](https://docs.github.com/ja/actions/learn-github-actions/reusing-workflows) used by multiple repositories for CI.
-  - Utilizes the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) concept.
-- [autowarefoundation/autoware-documentation](https://github.com/autowarefoundation/autoware-documentation)
-  - Documentation repository for Autoware users and developers.
-  - Since Autoware Core/Universe has multiple repositories, a central documentation repository is important to make information accessible from a single place.
+```
+.
+├── src/
+│   └── launcher/autoware_launch/   # Custom launch files (fusion_perception.launch.py)
+├── tracing/
+│   ├── analyze_latency.py          # Callback duration + E2E latency analysis
+│   └── flow_latency.py             # Message flow latency analysis
+├── centerpoint_params_fast.yaml    # CenterPoint tuned for lower latency
+├── centerpoint_params_slow.yaml    # CenterPoint tuned for higher accuracy
+└── docker/                         # Docker setup for waymo2bag conversion
+```
 
 ---
 
-## Using Autoware.AI
+## Limitations
 
-If you wish to use Autoware.AI, the previous version of Autoware based on ROS 1, switch to [autoware-ai](https://github.com/autowarefoundation/autoware_ai) repository. However, be aware that Autoware.AI has reached the end-of-life as of 2022, and we strongly recommend transitioning to Autoware Core/Universe for future use.
-
----
-
-## Contributing
-
-- [There is no formal process to become a contributor](https://github.com/autowarefoundation/autoware-projects/wiki#contributors) - you can comment on any [existing issues](https://github.com/autowarefoundation/autoware_universe/issues) or make a pull request on any Autoware repository!
-  - Make sure to follow the [Contribution Guidelines](https://autowarefoundation.github.io/autoware-documentation/main/contributing/).
-  - Take a look at Autoware's [various working groups](https://github.com/autowarefoundation/autoware-projects/wiki#working-group-list) to gain an understanding of any work in progress and to see how projects are managed.
-- If you have any technical questions, you can start a discussion in the [Q&A category](https://github.com/autowarefoundation/autoware/discussions/categories/q-a) to request help and confirm if a potential issue is a bug or not.
+1. Results reflect default QoS and a standard ROS 2 multi-threaded executor — no custom scheduling applied (intentionally out of scope).
+2. Bag replay timing can differ from live sensors; the camera/ROI gating effect is visible in both the executor timeline and measured rates.
+3. A single 20-second segment (n=132 frames) was profiled; broader coverage may expose additional corner cases.
+4. `ros2_tracing` overhead is minimal but nonzero; relative comparisons across nodes within the same session remain valid.
 
 ---
 
-## Useful resources
+## Technologies
 
-- [Autoware Foundation homepage](https://www.autoware.org/)
-- [Support guidelines](https://autowarefoundation.github.io/autoware-documentation/main/support/support-guidelines/)
-- [CI metrics](https://autowarefoundation.github.io/autoware-ci-metrics/)
+`ROS 2 Humble` · `Autoware Universe` · `TensorRT (FP16)` · `YOLOX-S` · `CenterPoint` · `LTTng` · `ros2_tracing` · `Eclipse Trace Compass` · `Waymo Open Dataset` · `MCAP` · `Docker` · `Python`
