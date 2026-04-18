@@ -89,6 +89,103 @@ This repository contains my thesis work, focused on **reducing end-to-end latenc
 
 ---
 
+## Thesis Quick Start (Fusion Perception + Tracing)
+
+This workspace is configured around the launch file:
+
+- `src/launcher/autoware_launch/autoware_launch/launch/fusion_perception.launch.py`
+
+### 1) Pipeline in this launch file
+
+The perception graph used in this thesis run is:
+
+1. Map component loads pointcloud map + lanelet/tf support.
+2. YOLOX (optional) publishes camera objects and masks.
+3. LiDAR CenterPoint publishes 3D detected objects on `/objects`.
+4. ROI Detected Object Fusion fuses 3D objects with front-camera ROIs.
+5. Multi Object Tracker publishes final tracked objects.
+6. RViz runs optionally for visualization.
+7. Rosbag playback starts after a 15s delay (to let all nodes initialize).
+
+Default topic flow in the current file:
+
+- CenterPoint output: `/objects`
+- Fusion input: `objects_in` (default `/objects`)
+- Fusion output: `objects_out` (default `/perception/fusion/fused_objects`)
+- Tracker output remap: `/perception/tracking/tracked_objects`
+
+### 2) Run the thesis launch
+
+```bash
+source install/setup.bash
+ros2 launch autoware_launch fusion_perception.launch.py
+```
+
+Useful overrides:
+
+```bash
+ros2 launch autoware_launch fusion_perception.launch.py \
+  rviz:=true \
+  use_sim_time:=true \
+  map_path:=/home/hamdy/autoware_map/waymo \
+  bag_path:=/home/hamdy/bags/waymo/ros2bags/<your_bag>.db3 \
+  bag_rate:=1.0
+```
+
+### 3) Tracing profiles used for evaluation
+
+The launch file already defines three LTTng profiles:
+
+- `ros`: userspace ROS events (`ros2:*`, `rcl:*`, `rclcpp:*`)
+- `kernel`: scheduler and IRQ kernel events
+- `ros-kernel`: both userspace and kernel events
+
+Trace configuration arguments in the launch file:
+
+- `trace_profile` (`ros`, `kernel`, `ros-kernel`)
+- `trace_append_ts`
+- `trace_base_path` (default `${HOME}/tracing`)
+
+Important note about current launch content:
+
+- Trace actions are defined but not added to the final `LaunchDescription` list by default.
+- To capture traces from this file directly, add one of `trace_ros_only`, `trace_kernel_only`, or `trace_ros_kernel` back into the returned `LaunchDescription` list.
+
+### 4) Analyze trace outputs
+
+Two scripts are provided under `tracing/`:
+
+- `tracing/analyze_latency.py`
+- `tracing/flow_latency.py`
+
+Example usage:
+
+```bash
+python3 tracing/analyze_latency.py ~/tracing/fusion_perception_trace-*
+python3 tracing/flow_latency.py ~/tracing/fusion_perception_trace-*
+```
+
+The analysis exports CSV files named like:
+
+- `latency_camera_front_image__to__perception_tracking_tracked_objects.csv`
+- `latency_lidar_concatenated_pointcloud__to__perception_tracking_tracked_objects.csv`
+
+### 5) Tracing results section (fill with your latest run)
+
+Use this table in your thesis reports and keep one row per experiment run:
+
+| Run ID | Trace profile | Bag rate | Camera -> tracked p50 (ms) | Camera -> tracked p95 (ms) | Camera -> tracked p99 (ms) | LiDAR -> tracked p50 (ms) | LiDAR -> tracked p95 (ms) | LiDAR -> tracked p99 (ms) | Notes |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---|
+| baseline-01 | ros | 1.0 | - | - | - | - | - | - | fill from CSV describe() |
+
+Suggested interpretation fields to track over time:
+
+- Throughput trend (messages/sec reaching tracked output)
+- Tail latency stability (p95/p99 under load)
+- Effect of enabling/disabling YOLOX and changing bag playback rate
+
+---
+
 ## Documentation
 
 To learn more about using or developing Autoware, refer to the [Autoware documentation site](https://autowarefoundation.github.io/autoware-documentation/main/). You can find the source for the documentation in [autowarefoundation/autoware-documentation](https://github.com/autowarefoundation/autoware-documentation).
